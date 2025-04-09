@@ -1,15 +1,66 @@
 ﻿@inherits LayoutComponentBase
+
 @using MudBlazor
 
 
-@* Required *@
-<MudThemeProvider />
-<MudPopoverProvider />
 
-@* Needed for dialogs *@
-<MudDialogProvider />
 
-@* Needed for snackbars *@
-<MudSnackbarProvider />
 
-@Body
+<CascadingValue Value="_isDarkMode">
+    <MudThemeProvider Theme="@MyCustomTheme" IsDarkMode="@_isDarkMode" />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <!-- Page Wrapper with theme-applied background -->
+    <MudPaper Class="pa-0 theme-bg" Square="true" Elevation="0" Style="min-height: 100vh">
+        <!-- Top-right Theme Switch -->
+        <MudSwitch @bind-Value="_isDarkMode"
+                   T="bool"
+                   Class="theme-switch"
+                   Color="Color.Primary"
+                   Label="Dark Mode" />
+
+        @Body
+    </MudPaper>
+</CascadingValue>
+
+<style>
+    .theme-switch {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+    }
+
+</style>
+
+@code {
+    private bool _isDarkMode = false;
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#007acc",          // Your brand blue
+                Secondary = "#e65100",         // Deep orange for contrast
+                Background = "#fafafa",        // Not used by MudPaper, but safe to keep
+                Surface = "#f5f5f5",           // This one gets applied to MudPaper!
+                AppbarBackground = "#ffffff",  // Optional: clean top bar
+                TextPrimary = "#1e1e1e",       // Strong dark text
+                TextSecondary = "#555555"
+            },
+
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#ff7043",           // Light blue for dark mode
+                Secondary = "#ffb74d",         // Soft amber
+                Background = "#121212",        // Dark mode body background
+                Surface = "#1e1e1e",           // Paper/cards
+                AppbarBackground = "#1f1f1f",
+                TextPrimary = "#ffffff",
+                TextSecondary = "#bbbbbb"
+            }
+        };
+
+}

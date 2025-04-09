@@ -4,23 +4,29 @@
 
 <PageTitle>DevToolsHub</PageTitle>
 
-<MudPaper Style="background-color: #f5f5f5; min-height: 100vh;" Square="true">
+<MudPaper Style="min-height: 100vh;" Square="true">
 
 <MudStack Spacing="8" AlignItems="AlignItems.Center">
 
-        <MudText Typo="Typo.h2" Align="Align.Center" Class="mt-10">
-        DevTools Hub – Instant Tools for Everyday Devs
-    </MudText>
+        <MudText Typo="Typo.h2" Align="Align.Center" Class="mt-10"
+                 Style="@(_isDarkMode
+                    ? "text-shadow: 0 2px 6px rgba(255, 255, 255, 0.25);"
+                    : "text-shadow: 0 2px 4px rgba(0,0,0,0.3);")">
+            DevTools Hub – Instant Tools for Everyday Devs
+        </MudText>
 
-    <MudStack Row="true" Wrap = "Wrap.Wrap" JustifyContent="Center" Spacing="3">
-        <MudText Color="Color.Primary">JSON</MudText>
-        <MudText Color="Color.Secondary">Base64</MudText>
-        <MudText Color="Color.Tertiary">URL</MudText>
-        <MudText Color="Color.Info">Timestamp</MudText>
-        <MudText Color="Color.Warning">UUID</MudText>
-        <MudText Color="Color.Error">Regex</MudText>
-        <MudText Color="Color.Success">Color Picker</MudText>
-    </MudStack>
+
+        <MudStack Row="true" Wrap="Wrap.Wrap" JustifyContent="Center" Spacing="3">
+            <MudText Style="color: #007acc;">JSON</MudText> <!-- Azure Blue -->
+            <MudText Style="color: #e65100;">Base64</MudText> <!-- Deep Orange -->
+            <MudText Style="color: #1e88e5;">URL</MudText> <!-- Blue -->
+            <MudText Style="color: #6d4c41;">Timestamp</MudText> <!-- Brown -->
+            <MudText Style="color: #6a1b9a;">UUID</MudText> <!-- Deep Purple -->
+            <MudText Style="color: #c62828;">Regex</MudText> <!-- Strong Red -->
+            <MudText Style="color: #2e7d32;">Color Picker</MudText> <!-- Green -->
+            <MudText Style="color: #ff6f00;">Hash Generator</MudText> <!-- Amber -->
+        </MudStack>
+
 
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary">
@@ -40,6 +46,8 @@
 
 </MudPaper>
 @code{
+
+    [CascadingParameter] private bool _isDarkMode { get; set; }
     void OpenUrl(string url)
     {
         JS.InvokeVoidAsync("open", url, "_blank");
