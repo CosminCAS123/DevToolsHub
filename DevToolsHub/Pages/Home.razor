@@ -1,0 +1,47 @@
+﻿@page "/"
+@using MudBlazor
+@inject IJSRuntime JS
+
+<PageTitle>DevToolsHub</PageTitle>
+
+<MudPaper Style="background-color: #f5f5f5; min-height: 100vh;" Square="true">
+
+<MudStack Spacing="8" AlignItems="AlignItems.Center">
+
+        <MudText Typo="Typo.h2" Align="Align.Center" Class="mt-10">
+        DevTools Hub – Instant Tools for Everyday Devs
+    </MudText>
+
+    <MudStack Row="true" Wrap = "Wrap.Wrap" JustifyContent="Center" Spacing="3">
+        <MudText Color="Color.Primary">JSON</MudText>
+        <MudText Color="Color.Secondary">Base64</MudText>
+        <MudText Color="Color.Tertiary">URL</MudText>
+        <MudText Color="Color.Info">Timestamp</MudText>
+        <MudText Color="Color.Warning">UUID</MudText>
+        <MudText Color="Color.Error">Regex</MudText>
+        <MudText Color="Color.Success">Color Picker</MudText>
+    </MudStack>
+
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary">
+        Try the Tools
+    </MudButton>
+
+    <MudText Typo="Typo.caption" Align="Align.Center" >
+        Free to use. No accounts, no tracking, no data collection.
+    </MudText>
+
+</MudStack>
+
+<MudStack Row="true" Spacing="2" Style="position:fixed; bottom:1rem; right:1rem;">
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Default" OnClick="@(() => OpenUrl("https://github.com/CosminCAS123"))" />
+    <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Default" OnClick="@(() => OpenUrl("https://www.instagram.com/_cosmin.andrei_/"))" />
+</MudStack>
+
+</MudPaper>
+@code{
+    void OpenUrl(string url)
+    {
+        JS.InvokeVoidAsync("open", url, "_blank");
+    }
+}
