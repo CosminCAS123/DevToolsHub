@@ -1,0 +1,45 @@
+﻿@page "/tools"
+@inject NavigationManager Nav
+@using DevToolsHub.Components <!-- Replace with your actual namespace -->
+@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.Medium"
+              Class="d-flex flex-column justify-center align-center"
+              Style="min-height: 100vh;">
+
+   
+    <MudGrid Spacing="3" Justify="Justify.Center">
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="JSON" Description="Format and validate JSON" OnOpen="@(() => Nav.NavigateTo("/tools/json"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="Base64" Description="Encode and decode Base64"  OnOpen="@(() => Nav.NavigateTo("/tools/base64"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="URL" Description="Encode and decode URLs"  OnOpen="@(() => Nav.NavigateTo("/tools/url"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="Timestamp" Description="Convert and format timestamps" OnOpen="@(() => Nav.NavigateTo("/tools/timestamp"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="UUID" Description="Generate UUIDs"  OnOpen="@(() => Nav.NavigateTo("/tools/uuid"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="Regex" Description="Test and build regular expressions"  OnOpen="@(() => Nav.NavigateTo("/tools/regex"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="Color Picker" Description="Pick and convert colors" OnOpen="@(() => Nav.NavigateTo("/tools/colorpicker"))" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="6">
+            <ToolCard Name="Hash Generator" Description="Generate hashes (MD5, SHA1...)"  OnOpen="@(() => Nav.NavigateTo("/tools/hash"))" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
