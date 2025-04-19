@@ -1,0 +1,50 @@
+﻿@page "/tools/uuid"
+@inject UuidService UuidService
+@inject ISnackbar Snackbar
+@inject ClipboardService clipboardService
+@using MudBlazor
+@using Services
+<MudPaper Class="pa-10" Style="text-align: center;" Elevation = "0">
+    <MudText Typo="Typo.h3" Class="mb-4" Color="Color.Primary">Online UUID Generator</MudText>
+
+    <MudPaper Class="py-4 px-6 mb-4"  Elevation="4">
+        <MudText Typo="Typo.h5">Your Version 4 UUID:</MudText>
+        <MudText Typo="Typo.h4" Class="mt-2">@currentUuid</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Default" OnClick="CopyUuid" />
+    </MudPaper>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GenerateUuid" Class="mb-6 mt-4">
+        Generate a version 4 UUID
+    </MudButton>
+
+    <MudPaper Class="pa-6 mt-16" Elevation="5" Style="max-width: 700px; margin: auto;">
+        <MudText Typo="Typo.h6" GutterBottom="true">What is a Version 4 UUID?</MudText>
+        <MudText Typo="Typo.body1">
+            A Version 4 UUID is a universally unique identifier generated using random numbers.
+            It does not include any identifiable information like timestamps or device data, making it
+            safe and private to use in most applications. The chance of collision is astronomically low,
+            which makes v4 UUIDs ideal for identifiers in distributed systems, databases, and APIs.
+        </MudText>
+    </MudPaper>
+</MudPaper>
+
+@code{
+     
+    private string currentUuid = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        GenerateUuid(); // optional auto-generate on page load
+    }
+
+    private async Task CopyUuid()
+    {
+    await clipboardService.CopyToClipboard(currentUuid);
+    Snackbar.Add("Copied to clipboard!", Severity.Success);
+   }
+
+    private void GenerateUuid()
+    {
+        currentUuid = UuidService.Generate();
+    }
+}

@@ -1,6 +1,5 @@
 ﻿@page "/"
 @using MudBlazor
-@inject IJSRuntime JS
 @inject NavigationManager Nav
 
 <PageTitle>DevToolsHub</PageTitle>
@@ -38,19 +37,12 @@
 
 </MudStack>
 
-<MudStack Row="true" Spacing="2" Style="position:fixed; bottom:1rem; right:1rem;">
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Default" OnClick="@(() => OpenUrl("https://github.com/CosminCAS123"))" />
-    <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Default" OnClick="@(() => OpenUrl("https://www.instagram.com/_cosmin.andrei_/"))" />
-</MudStack>
 
 </MudPaper>
 @code{
 
     [CascadingParameter] private bool _isDarkMode { get; set; }
-    void OpenUrl(string url)
-    {
-        JS.InvokeVoidAsync("open", url, "_blank");
-    }
+    
 
 
 

@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IJSRuntime JS
 @using MudBlazor
 
 
@@ -21,6 +21,14 @@
                    Label="Dark Mode" />
 
         @Body
+
+        <MudStack Row="true" Spacing="2" Style="position:fixed; bottom:1rem; right:1rem;">
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Default" OnClick="@(() => OpenUrl("https://github.com/CosminCAS123"))" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Default" OnClick="@(() => OpenUrl("https://www.instagram.com/_cosmin.andrei_/"))" />
+        </MudStack>
+
+
+
     </MudPaper>
 
     <style>
@@ -46,6 +54,15 @@
 </style>
 
 @code {
+
+
+
+     void OpenUrl(string url)
+    {
+        JS.InvokeVoidAsync("open", url, "_blank");
+    }
+
+
     private bool _isDarkMode = false;
 
     MudTheme MyCustomTheme = new MudTheme()
