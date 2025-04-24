@@ -18,4 +18,7 @@ await builder.Build().RunAsync();
 {
     builder.Services.AddTransient<UuidService>();
     builder.Services.AddTransient<ClipboardService>();
+    builder.Services.AddTransient<Base64Service>();
+    builder.Services.AddTransient<UrlService>();
+
 }

@@ -2,6 +2,9 @@
 @using MudBlazor
 @inject Services.ClipboardService clipboardService
 @inject ISnackbar Snackbar
+@inject Services.Base64Service base64Service
+
+<PageTitle>Base64</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh;">
     <MudPaper Elevation="4" Class="pa-6" Style="width: 100%; max-width: 700px; text-align: center;">
@@ -73,10 +76,7 @@
     {
         try
         {
-            _output = _mode == Base64Mode.Encode ?
-            Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(_input)) :
-            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(_input));
-
+            _output = base64Service.Result(_mode == Base64Mode.Encode ? 0 : 1 , this._input);
         }
 
         catch

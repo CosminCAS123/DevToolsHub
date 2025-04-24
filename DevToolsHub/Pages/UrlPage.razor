@@ -1,0 +1,86 @@
+﻿@page "/tools/url"
+@using MudBlazor
+@inject Services.ClipboardService clipboardService
+@inject Services.UrlService urlService
+@inject ISnackbar snackbar
+
+<PageTitle>URL</PageTitle>
+
+
+
+<MudContainer MaxWidth="MaxWidth.Medium"
+              Class="d-flex flex-column justify-center align-center"
+              Style="min-height: 100vh;">
+
+    <MudPaper Elevation="2" Class="pa-6" Style="width: 100%; max-width: 700px; text-align: center;">
+
+        <MudText Typo="Typo.h4" Class="mb-4" Color="Color.Primary">
+            URL Encoder / Decoder
+        </MudText>
+
+        <MudSelect T="UrlMode" @bind-Value="_mode" Label="Mode" Dense="true"
+                   Class="my-2" Style="max-width: 300px; margin: auto;">
+            <MudSelectItem Value="UrlMode.Encode">Encode</MudSelectItem>
+            <MudSelectItem Value="UrlMode.Decode">Decode</MudSelectItem>
+        </MudSelect>
+
+        <MudTextField @bind-Value="_input" Label="Input"
+                      Variant="Variant.Outlined" Lines="5"
+                      ShrinkLabel = "true"
+                      FullWidth="true"
+                      Class="my-2"  />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Process" Class="my-2">
+            @_mode.ToString()
+        </MudButton>
+
+        <MudTextField @bind-Value="_output" Label="Result"
+                      Variant="Variant.Filled" Lines="5" ReadOnly="true"
+                      ShrinkLabel="true"
+                       FullWidth="true"
+                      Class="my-2" >
+                  @_output</MudTextField>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CopyResult" Class="my-2">
+            Copy Result
+        </MudButton>
+
+    </MudPaper>
+
+    <MudText Typo="Typo.caption" Align="Align.Center" Class="mt-2" Color="Color.Secondary">
+        This tool uses standard URL encoding (RFC 3986) to make text safe for use in URLs.
+    </MudText>
+</MudContainer>
+
+@code {
+    public enum UrlMode
+    {
+        Encode,
+        Decode
+    }
+
+    private UrlMode _mode = UrlMode.Encode;
+    private string _input = string.Empty;
+    private string _output = string.Empty;
+
+    private void Process()
+    {
+        try
+        {
+            _output = _mode == UrlMode.Encode
+                ? urlService.Encode(_input)
+                : urlService.Decode(_input);
+        }
+        catch
+        {
+            _output = "⚠️ Invalid input for selected mode.";
+        }
+    }
+
+    private async Task CopyResult()
+    {
+        await clipboardService.CopyToClipboard(_output);
+        snackbar.Add("Result copied!", Severity.Success);
+    }
+}
+
