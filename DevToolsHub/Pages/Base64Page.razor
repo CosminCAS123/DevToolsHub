@@ -1,0 +1,99 @@
+﻿@page "/tools/base64"
+@using MudBlazor
+@inject Services.ClipboardService clipboardService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh;">
+    <MudPaper Elevation="4" Class="pa-6" Style="width: 100%; max-width: 700px; text-align: center;">
+
+        <MudText Typo="Typo.h4" Class="mb-4" Color="Color.Primary">
+            Base64 Encoder / Decoder
+        </MudText>
+
+        <MudSelect T="Base64Mode" @bind-Value="_mode" Label="Mode" Dense="true"
+                   Class="mb-4" Style="max-width: 300px; margin: auto;">
+            <MudSelectItem Value="Base64Mode.Encode">Encode</MudSelectItem>
+            <MudSelectItem Value="Base64Mode.Decode">Decode</MudSelectItem>
+        </MudSelect>
+
+        <MudTextField @bind-Value="_input"
+                      Label="Input"
+                      Variant="Variant.Outlined"
+                      Lines="5"
+                      Class="my-2"
+                      FullWidth="true"
+                      ShrinkLabel = "true"
+                       />
+
+             <MudSpacer></MudSpacer>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Process"  >
+            @_mode.ToString()
+        </MudButton>
+        
+        <MudTextField @bind-Value="_output"
+                      Label="Result"
+                      Class="my-2"
+                      Variant="Variant.Filled"
+                      Lines="5"
+                     ReadOnly="true"
+                      FullWidth="true"
+                      ShrinkLabel="true" >
+                  @_output
+                  
+                  </MudTextField>
+                     
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CopyResult" >
+            Copy Result
+        </MudButton>
+
+    </MudPaper>
+
+    <MudText Typo="Typo.caption" Class="mt-10" Color="Color.Secondary" Align="Align.Center">
+        This tool uses UTF-8 encoding to convert your text to Base64 and back.
+    </MudText>
+
+</MudContainer>
+
+
+@code {
+
+    public enum Base64Mode
+    {
+        Encode = default, 
+        Decode
+    }
+
+
+    private Base64Mode _mode = default;
+    private string _input = string.Empty;
+    private string _output = string.Empty;
+
+    private void Process()
+    {
+        try
+        {
+            _output = _mode == Base64Mode.Encode ?
+            Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(_input)) :
+            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(_input));
+
+        }
+
+        catch
+        {
+            _output = "⚠️ Invalid input for selected mode.";
+
+        }
+    }
+
+    private async Task CopyResult()
+    {
+        await this.clipboardService.CopyToClipboard(_output);
+        this.Snackbar.Add(message: "Result copied!", severity: Severity.Success);
+    }
+
+
+
+
+
+}
