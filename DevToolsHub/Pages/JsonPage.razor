@@ -1,0 +1,77 @@
+﻿@page "/tools/json"
+@using MudBlazor;
+@inject Services.JsonService jsonService;
+@inject ISnackbar snackbar 
+@inject Services.ClipboardService clipboardService
+
+<PageTitle>Json Formatter / Validator</PageTitle>
+
+<MudContainer Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh;">
+
+    <MudText Typo="Typo.h2" Class="mb-4">
+        JSON Formatter / Validator
+    </MudText>
+
+    <MudPaper Class="pa-6 mx-auto" MaxWidth="700px" Style="width: 100%;" Elevation="4">
+
+        <MudTextField Label="Paste your JSON here"
+                      @bind-Value="@_input"
+                      Lines="10"
+                      FullWidth="true"
+                      Class="mb-4"
+                      Variant="Variant.Outlined"
+                      ShrinkLabel="true" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mb-4" OnClick="Format">
+            Format JSON
+        </MudButton>
+        <div style="position : relative">
+        <MudTextField @bind-Value="@_output"
+                      ReadOnly="true"
+                      Label="Result"
+                      Lines="10"
+                      FullWidth="true"
+                      ShrinkLabel="true"
+                      Variant="Variant.Outlined"
+                      Class="mb-0" 
+                      Text="@_output"/>
+            <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           Style="position: absolute; bottom: 12px; right: 12px;"
+                           Variant="Variant.Text"
+                           OnClick="CopyOutputToClipboard" />
+         </div>
+
+    </MudPaper>
+
+</MudContainer>
+
+@code {
+    private string _input = string.Empty;
+    private string _output = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        this.snackbar.Configuration.PreventDuplicates = true;
+        this.snackbar.Configuration.VisibleStateDuration = 2000;
+        this.snackbar.Configuration.ShowCloseIcon = false;
+        this.snackbar.Configuration.HideTransitionDuration = 500;
+        this.snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+    }
+    private async Task CopyOutputToClipboard()
+    {
+        await this.clipboardService.CopyToClipboard(this._output);
+        this.snackbar.Add("Json copied to clipboard!", Severity.Success);
+    }
+
+    private void Format()
+    {
+        var result = jsonService.Format(_input);
+        this._output = result.result;
+        if (result.success) this.snackbar.Add("JSON formatted successfully!", Severity.Success);
+        else this.snackbar.Add("Invalid JSON input. Please check your syntax.", Severity.Error);
+
+    }
+
+}
