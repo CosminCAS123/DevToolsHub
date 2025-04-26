@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using System.Runtime.CompilerServices;
 using DevToolsHub.Services;
+using MudBlazor.Services;
+using MudBlazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -11,6 +13,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 AddToolServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PreventDuplicates = true;
+    config.SnackbarConfiguration.VisibleStateDuration = 2000;
+    config.SnackbarConfiguration.ShowCloseIcon = false;
+    config.SnackbarConfiguration.HideTransitionDuration = 500;
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
+});
 await builder.Build().RunAsync();
 
 
@@ -22,5 +32,6 @@ await builder.Build().RunAsync();
     builder.Services.AddTransient<UrlService>();
     builder.Services.AddTransient<JsonService>();
     builder.Services.AddTransient<TimestampConverterService>();
+    builder.Services.AddTransient<HashingService>();
 
 }

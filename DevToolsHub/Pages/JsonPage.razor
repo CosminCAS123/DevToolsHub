@@ -51,14 +51,7 @@
     private string _input = string.Empty;
     private string _output = string.Empty;
 
-    protected override void OnInitialized()
-    {
-        this.snackbar.Configuration.PreventDuplicates = true;
-        this.snackbar.Configuration.VisibleStateDuration = 2000;
-        this.snackbar.Configuration.ShowCloseIcon = false;
-        this.snackbar.Configuration.HideTransitionDuration = 500;
-        this.snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-    }
+   
     private async Task CopyOutputToClipboard()
     {
         await this.clipboardService.CopyToClipboard(this._output);

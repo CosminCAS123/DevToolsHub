@@ -1,0 +1,124 @@
+﻿@page "/tools/hashing"
+@using MudBlazor
+@inject Services.HashingService hashGenerator
+@inject ISnackbar snackbar
+@inject Services.ClipboardService clipboardService
+
+
+<PageTitle>Hash Generator</PageTitle>
+<MudContainer Class="d-flex flex-column align-center justify-center" Style="min-height: 100vh;">
+
+    <MudText Typo="Typo.h2" Class="mb-1">
+        Hash Generator
+    </MudText>
+
+    <!-- Small subtitle -->
+    <MudText Typo="Typo.subtitle2" Align="Align.Center" Color="Color.Secondary" Class="mb-6">
+        Supported Algorithms: SHA-1, SHA-256, SHA-384, SHA-512
+    </MudText>
+    <div style="max-width: 700px; width: 100%;" class="mb-6">
+        <MudTextField Label="Enter Text"
+                      @bind-Value="_inputText"
+                      Counter="100"
+                      MaxLength="100"
+                      Immediate="true"
+                      Variant="Variant.Text"
+                      ShrinkLabel="true"
+                      FullWidth="true" />
+    </div>
+
+<!-- SHA-1 -->
+<MudPaper Class="pa-6 mb-6" MaxWidth="700px" Style="width: 100%;">
+
+    <MudText Typo="Typo.h5" Class="mb-4">
+        Results
+    </MudText>
+
+    <!-- SHA-1 field + copy button -->
+    <div style="position: relative;" class="mb-4">
+            <MudTextField Label="SHA-1" @bind-Value="_sha1" ReadOnly="true" FullWidth="true" ShrinkLabel="true" Style="padding-right: 40px;" />
+        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                       Size="Size.Small"
+                       Color="Color.Primary"
+                       Style="position: absolute; bottom: 12px; right: 12px; background: white;"
+                       OnClick="@(() => CopyToClipboard(_sha1))" />
+    </div>
+
+    <!-- SHA-256 field + copy button -->
+    <div style="position: relative;" class="mb-4">
+            <MudTextField Label="SHA-256" @bind-Value="_sha256" ReadOnly="true" FullWidth="true" ShrinkLabel="true" Style="padding-right: 40px;" />
+        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                       Size="Size.Small"
+                       Color="Color.Primary"
+                       Style="position: absolute; bottom: 12px; right: 12px; background: white;"
+                       OnClick="@(() => CopyToClipboard(_sha256))" />
+    </div>
+
+    <!-- SHA-384 field + copy button -->
+    <div style="position: relative;" class="mb-4">
+            <MudTextField Label="SHA-384" @bind-Value="_sha384" ReadOnly="true" FullWidth="true" ShrinkLabel="true" Style="padding-right: 40px;" />
+        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                       Size="Size.Small"
+                       Color="Color.Primary"
+                       Style="position: absolute; bottom: 12px; right: 12px; background: white;"
+                       OnClick="@(() => CopyToClipboard(_sha384))" />
+    </div>
+
+    <!-- SHA-512 field + copy button -->
+    <div style="position: relative;" class="mb-0">
+            <MudTextField Label="SHA-512" @bind-Value="_sha512" ReadOnly="true" FullWidth="true" ShrinkLabel="true" Style="padding-right: 40px;" />
+        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                       Size="Size.Small"
+                       Color="Color.Primary"
+                       Style="position: absolute; bottom: 12px; right: 12px; background: white;"
+                       OnClick="@(() => CopyToClipboard(_sha512))" />
+
+    </div>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   OnClick="GenerateHashes"
+                   FullWidth="false"
+                   Class="mt-4">
+            Generate Hashes
+        </MudButton>
+
+</MudPaper>
+
+</MudContainer>
+
+
+@code{
+
+    private string _inputText = string.Empty;
+    private string _sha1 = string.Empty;
+    private string _sha256 = string.Empty;
+    private string _sha384 = string.Empty;
+    private string _sha512 = string.Empty;
+
+    private void GenerateHashes()
+    {
+        if (string.IsNullOrWhiteSpace(_inputText))
+        {
+            this.snackbar.Add("You forgot to add your text.", severity: Severity.Error);
+            return;
+        }
+        _sha1 = this.hashGenerator.GenerateSHA1(_inputText);
+        _sha256 = this.hashGenerator.GenerateSHA256(_inputText);
+        _sha384 = this.hashGenerator.GenerateSHA384(_inputText);
+        _sha512 = this.hashGenerator.GenerateSHA512(_inputText);
+
+    }
+
+private async Task CopyToClipboard(string text)
+{
+    if (!string.IsNullOrEmpty(text))
+    {
+        await clipboardService.CopyToClipboard(text);
+        snackbar.Add("Copied to clipboard!", Severity.Success);
+    }
+    else
+    {
+        snackbar.Add("Nothing to copy.", Severity.Error);
+    }
+}
+}
