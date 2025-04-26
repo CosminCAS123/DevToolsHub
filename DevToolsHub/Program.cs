@@ -21,5 +21,6 @@ await builder.Build().RunAsync();
     builder.Services.AddTransient<Base64Service>();
     builder.Services.AddTransient<UrlService>();
     builder.Services.AddTransient<JsonService>();
+    builder.Services.AddTransient<TimestampConverterService>();
 
 }

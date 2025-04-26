@@ -1,0 +1,147 @@
+﻿@page "/tools/time"
+@using MudBlazor
+@inject ISnackbar snackbar
+@inject Services.TimestampConverterService timeService
+
+<PageTitle>Timestamp Convreter</PageTitle>
+<MudAlert Severity="Severity.Info" Variant="Variant.Filled" Dense="true" Elevation="1"
+          Style="position: absolute; top: 16px; left: 16px;background-color: #c19a00; color: white; max-width: 280px;">
+    <MudText Typo="Typo.subtitle2">
+        Local time is based on your device's timezone settings.
+    </MudText>
+</MudAlert>
+<MudContainer Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh;">
+
+    <MudText Typo="Typo.h2" Class="my-3">Timestamp Converter</MudText>
+   
+
+    <MudPaper Class="pa-6 mb-6" MaxWidth="700px" Style="width: 100%;" Elevation="3">
+
+        <MudText Typo="Typo.h5" Class="mb-4">
+            Convert Timestamp to Date
+        </MudText>
+
+       
+
+        <MudTextField Label="Enter Timestamp"
+                      @bind-Value="_inputTimestamp"
+                      FullWidth="true"
+                      Class="mb-4"
+                      Immediate="true"
+                      Lines="1"
+                      ShrinkLabel="true" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="ConvertTimestampToDate" Class="mb-4">
+            Convert to Date
+        </MudButton>
+
+        <MudTextField Label="UTC Time"
+                      @bind-Value="_utcTime"
+                      ReadOnly="true"
+                      FullWidth="true"
+                      Class="mb-2"
+                      ShrinkLabel="true" />
+
+        <MudTextField Label="Local Time"
+                      @bind-Value="_localTime"
+                      ReadOnly="true"
+                      FullWidth="true"
+                      Class="mb-0"
+                      ShrinkLabel="true" />
+
+    </MudPaper>
+
+    <!-- Section 2: Date ➔ Timestamp -->
+    <MudPaper Class="pa-6" MaxWidth="700px" Style="width: 100%;" Elevation="3">
+
+        <MudText Typo="Typo.h5" Class="mb-4">
+            Convert Date to Timestamp
+        </MudText>
+
+        <div class="d-flex justify-center mb-4">
+            <MudDatePicker @bind-Date="_inputDate"
+                           Label="Select Date"
+                           Immediate="true" />
+        </div>
+        <div class="d-flex justify-center mb-4">
+            <MudTimePicker @bind-Time="_inputTime"
+                           Label="Select Time"
+                           Immediate="true" />
+        </div>
+
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="ConvertDateToTimestamp" Class="mb-4">
+            Convert to Timestamp
+        </MudButton>
+
+        <MudTextField Label="Timestamp Result"
+                      @bind-Value="_timestampResult"
+                      ReadOnly="true"
+                      FullWidth="true"
+                      Class="mb-0"
+                      ShrinkLabel="true" />
+
+    </MudPaper>
+
+
+</MudContainer>
+
+
+
+@code{
+    private string _inputTimestamp = string.Empty;
+    private string _utcTime = string.Empty;
+    private string _localTime = string.Empty;
+    private DateTime? _inputDate;
+    private string _timestampResult = string.Empty;
+    private TimeSpan? _inputTime;
+
+
+    protected override void OnInitialized()
+    {
+        this.snackbar.Configuration.PreventDuplicates = true;
+        this.snackbar.Configuration.VisibleStateDuration = 2000;
+        this.snackbar.Configuration.ShowCloseIcon = false;
+        this.snackbar.Configuration.HideTransitionDuration = 500;
+        this.snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+    }
+
+    private void ConvertDateToTimestamp()
+    {
+        if (!_inputDate.HasValue)
+        {
+            snackbar.Add("Please select a date.", Severity.Error);
+            return;
+        }
+
+        var fullDateTime = _inputDate.Value.Date + _inputTime.GetValueOrDefault();
+        var timestamp = new DateTimeOffset(fullDateTime).ToUnixTimeSeconds();
+        _timestampResult = timestamp.ToString();
+
+        snackbar.Add("Timestamp generated successfully!", Severity.Success);
+    }
+    private void ConvertTimestampToDate()
+    {
+        if (string.IsNullOrWhiteSpace(_inputTimestamp))
+        {
+            snackbar.Add("Please enter a timestamp.", Severity.Error);
+            return;
+        }
+
+        var (success, utcTime, localTime) = timeService.ConvertTimestampToDate(_inputTimestamp);
+
+        if (success)
+        {
+            _utcTime = utcTime;
+            _localTime = localTime;
+            snackbar.Add("Timestamp converted successfully!", Severity.Success);
+        }
+        else
+        {
+            snackbar.Add("Invalid timestamp format. Please check your input.", Severity.Error);
+        }
+    }
+
+
+
+}
