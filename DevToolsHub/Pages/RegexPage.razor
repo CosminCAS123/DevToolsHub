@@ -1,8 +1,52 @@
 ﻿@page "/tools/regex"
 @using MudBlazor
+@using DevToolsHub.Services
+@inject RegexService regexService
+@inject ISnackbar snackbar
 
-<MudContainer Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh">
-<MudText Typo="Typo.h2" Class="mb-20">REGEX GENERATOR</MudText>
-<MudText Typo="Typo.caption">To be implemented.</MudText>
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-column justify-center align-center" Style="min-height: 100vh;">
+
+    <div style="width: 100%; max-width: 700px; text-align: center;">
+
+        <MudText Typo="Typo.body2" Class="mb-6" Style="color: gray;">
+            Enter a pattern you want to match. This tool will generate a basic regular expression (regex) for you.
+            You can choose to match the entire string (using ^ and $) or a partial match.
+            Special characters are automatically escaped for your convenience.
+        </MudText>
+
+        <MudPaper Elevation="4" Class="pa-6" Style="width: 100%; text-align: center;">
+
+            <MudText Typo="Typo.h3" Class="mb-6">REGEX GENERATOR 🎯</MudText>
+
+            <MudTextField @bind-Value="_patternInput" Label="What do you want to match?" Variant="Variant.Outlined" FullWidth="true" Class="mb-4" />
+
+            <MudCheckBox T="bool" @bind-Checked="_fullMatch" Label="Full Match (add ^ and $)" Class="mb-4" />
+
+            <MudButton OnClick="GenerateRegex" Variant="Variant.Filled" Color="Color.Primary" Class="mb-6">
+                Generate Regex
+            </MudButton>
+
+            <MudText Typo="Typo.subtitle1" Class="mb-2 text-center">Generated Regex:</MudText>
+
+            <MudTextField Value="@_generatedRegex" ReadOnly="true" Lines="3" Variant="Variant.Outlined" FullWidth="true" />
+
+        </MudPaper>
+
+    </div>
 
 </MudContainer>
+
+
+
+@code {
+    private string _patternInput = string.Empty;
+    private bool _fullMatch = true;
+    private string _generatedRegex = string.Empty;
+
+    private void GenerateRegex()
+    {
+        _generatedRegex = regexService.GenerateBasicRegex(_patternInput, _fullMatch);
+        if (string.IsNullOrEmpty(_generatedRegex)) snackbar.Add("Enter some text...", Severity.Error);
+        else snackbar.Add("Regex generated successfully!", Severity.Success);
+    }
+}

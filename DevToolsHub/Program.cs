@@ -2,9 +2,7 @@ using DevToolsHub;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
-using System.Runtime.CompilerServices;
 using DevToolsHub.Services;
-using MudBlazor.Services;
 using MudBlazor;
 using Blazored.LocalStorage;
 
@@ -35,5 +33,6 @@ await builder.Build().RunAsync();
     builder.Services.AddTransient<JsonService>();
     builder.Services.AddTransient<TimestampConverterService>();
     builder.Services.AddTransient<HashingService>();
+    builder.Services.AddTransient<RegexService>();
 
 }
