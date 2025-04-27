@@ -6,12 +6,14 @@ using System.Runtime.CompilerServices;
 using DevToolsHub.Services;
 using MudBlazor.Services;
 using MudBlazor;
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddBlazoredLocalStorage();
 AddToolServices();
 builder.Services.AddMudServices(config =>
 {

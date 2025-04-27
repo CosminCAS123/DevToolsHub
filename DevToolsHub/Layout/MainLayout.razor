@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JS
+@inject ILocalStorageService localStorageService
 @using MudBlazor
-
+@using Blazored.LocalStorage
 
 
 
@@ -14,9 +15,11 @@
 
     <!-- Page Wrapper with theme-applied background -->
     <MudPaper Class="pa-0 theme-bg" Square="true" Elevation="0" Style="min-height: 100vh">
-        <MudSwitch @bind-Value="_isDarkMode"
+        <MudSwitch Value="_isDarkMode"
                    T="bool"
+                   ValueChanged="OnDarkModeChanged"
                    Class="theme-switch"
+                   Change
                    Color="Color.Primary"
                    Label="Dark Mode" />
 
@@ -54,53 +57,73 @@
 </style>
 
 @code {
+    private MudTheme MyCustomTheme;
 
 
-
-     void OpenUrl(string url)
-    {
-        JS.InvokeVoidAsync("open", url, "_blank");
-    }
 
 
     private bool _isDarkMode = false;
 
-    MudTheme MyCustomTheme = new MudTheme()
+
+    private async Task OnDarkModeChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        await localStorageService.SetItemAsync("isDarkMode", newValue); // <- saves it here
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorageService.ContainKeyAsync("isDarkMode"))
         {
-            PaletteLight = new PaletteLight()
+            _isDarkMode = await localStorageService.GetItemAsync<bool>("isDarkMode");
+        }
+    }
+    public MainLayout()
+    {
+        this.MyCustomTheme = GenerateTheme();
+    }
+
+    private MudTheme GenerateTheme()
+    {
+        return new MudTheme()
             {
-                Primary = "#007acc",          // Brand blue
-                Secondary = "#e65100",        // Deep orange
-                Tertiary = "#2e7d32",         // Green
-                Info = "#1e88e5",             // Blue
-                Warning = "#ff6f00",          // Amber
-                Error = "#c62828",            // Red
-                Success = "#388e3c",          // Optional alt green
+                PaletteLight = new PaletteLight()
+                {
+                    Primary = "#007acc",          // Brand blue
+                    Secondary = "#e65100",        // Deep orange
+                    Tertiary = "#2e7d32",         // Green
+                    Info = "#1e88e5",             // Blue
+                    Warning = "#ff6f00",          // Amber
+                    Error = "#c62828",            // Red
+                    Success = "#388e3c",          // Optional alt green
 
-                Background = "#fafafa",
-                Surface = "#f5f5f5",
-                AppbarBackground = "#ffffff",
-                TextPrimary = "#1e1e1e",
-                TextSecondary = "#555555"
-            },
+                    Background = "#fafafa",
+                    Surface = "#f5f5f5",
+                    AppbarBackground = "#ffffff",
+                    TextPrimary = "#1e1e1e",
+                    TextSecondary = "#555555"
+                },
 
-            PaletteDark = new PaletteDark()
-            {
-                Primary = "#ff7043",          // Light orange
-                Secondary = "#ffb74d",        // Soft amber
-                Tertiary = "#81c784",         // Light green
-                Info = "#64b5f6",             // Soft blue
-                Warning = "#ffb300",          // Bright amber
-                Error = "#ef5350",            // Light red
-                Success = "#81c784",          // Light green
+                PaletteDark = new PaletteDark()
+                {
+                    Primary = "#ff7043",          // Light orange
+                    Secondary = "#ffb74d",        // Soft amber
+                    Tertiary = "#81c784",         // Light green
+                    Info = "#64b5f6",             // Soft blue
+                    Warning = "#ffb300",          // Bright amber
+                    Error = "#ef5350",            // Light red
+                    Success = "#81c784",          // Light green
 
-                Background = "#121212",
-                Surface = "#1e1e1e",
-                AppbarBackground = "#1f1f1f",
-                TextPrimary = "#ffffff",
-                TextSecondary = "#bbbbbb"
-            }
-        };
-
+                    Background = "#121212",
+                    Surface = "#1e1e1e",
+                    AppbarBackground = "#1f1f1f",
+                    TextPrimary = "#ffffff",
+                    TextSecondary = "#bbbbbb"
+                }
+            };
+    }
+    void OpenUrl(string url)
+    {
+        JS.InvokeVoidAsync("open", url, "_blank");
+    }
 
 }

@@ -12,10 +12,10 @@
             Pick a color 🎨
         </MudText>
 
-        <MudColorPicker @bind-Text="color_value" DisableAlpha="false" Class="mb-8" Placeholder="Select Color" ColorPickerMode="ColorPickerMode.HEX" />
+        <MudColorPicker @bind-Text="color_value" DisableAlpha="false" Class="mb-12" Placeholder="Select Color" ColorPickerMode="ColorPickerMode.HEX" Elevation="4"/>
 
-        <div class="color-preview mb-8" style="background-color:@color_value;">
-            DEVTOOLSHUB
+        <div class="color-preview mb-8 d-flex align-center" style="background-color:@color_value;">
+          DEVTOOLSHUB
         </div>
 
         <MudButton Variant="Variant.Filled" Class="my-4" Size="Size.Large" OnClick="CopyColorToClipboard" Color="Color.Secondary">
@@ -31,7 +31,7 @@
         height: 250px;
         border-radius: 20px;
         background-color: #2196F3;
-  
+         padding: 0 3rem; 
         font-size: 48px;
         font-weight: 900;
         color: white;
